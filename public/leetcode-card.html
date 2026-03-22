@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode Progress</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e10;
+      --card: #161618;
+      --border: #232326;
+      --text: #f0f0f0;
+      --text-2: #a0a0a8;
+      --text-3: #606068;
+      --track: #1c1c1f;
+      --ring-track: #2a2a2e;
+      --ring-fill: #52525b;
+      --dot: #f59e0b;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════════ Card ═══════════ */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px 32px;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    /* ═══════════ Header ═══════════ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .header-left svg { width: 20px; height: 20px; fill: var(--text-2); }
+
+    .header a {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .header a:hover { color: var(--text); }
+    .header a svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ═══════════ Body ═══════════ */
+    .body {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    /* ── Donut ── */
+    .donut {
+      position: relative;
+      flex-shrink: 0;
+      width: 148px;
+      height: 148px;
+    }
+    .donut svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .donut-track {
+      fill: none;
+      stroke: var(--ring-track);
+      stroke-width: 10;
+    }
+    .donut-fill {
+      fill: none;
+      stroke: var(--ring-fill);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dashoffset: var(--circ);
+      transition: stroke-dashoffset 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .donut-dot {
+      fill: var(--dot);
+      opacity: 0;
+      transition: opacity 0.4s ease 1.2s, cx 1.4s cubic-bezier(0.22,1,0.36,1), cy 1.4s cubic-bezier(0.22,1,0.36,1);
+    }
+    .donut-dot.show { opacity: 1; }
+
+    .donut-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .donut-num {
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .donut-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-3);
+      margin-top: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Rows ── */
+    .rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+    .row-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 7px;
+    }
+    .row-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .row-frac {
+      font-size: 14px;
+      color: var(--text-2);
+      font-variant-numeric: tabular-nums;
+    }
+    .row-frac b {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .bar-track {
+      width: 100%;
+      height: 7px;
+      background: var(--track);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      width: 0%;
+    }
+    .bar-fill.easy   { background: var(--green); transition: width 1s cubic-bezier(0.22,1,0.36,1) 0.2s; }
+    .bar-fill.medium { background: var(--amber); transition: width 1s cubic-bezier(0.22,1,0.36,1) 0.35s; }
+    .bar-fill.hard   { background: var(--red);   transition: width 1s cubic-bezier(0.22,1,0.36,1) 0.5s; }
+
+    /* ═══════════ Responsive ═══════════ */
+    @media (max-width: 520px) {
+      .card { padding: 22px 20px 26px; }
+      .body { flex-direction: column; gap: 28px; }
+      .donut { width: 130px; height: 130px; }
+      .donut-num { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zM9.167 15.817a1.376 1.376 0 0 0-.97.442l-1.356 1.373a1.384 1.384 0 0 0 .009 1.958 1.376 1.376 0 0 0 1.953-.009l1.356-1.373a1.384 1.384 0 0 0-.009-1.958 1.376 1.376 0 0 0-.983-.433zM15.12 12.96h-5.65a1.384 1.384 0 1 0 0 2.768h5.65a1.384 1.384 0 1 0 0-2.768z"/>
+      </svg>
+      LeetCode Progress
+    </div>
+    <a href="https://leetcode.com/u/ayush02_jain/" target="_blank" rel="noopener noreferrer">
+      View Profile
+      <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+    </a>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+    <!-- Donut Chart -->
+    <div class="donut" id="donut">
+      <svg viewBox="0 0 148 148">
+        <circle class="donut-track" cx="74" cy="74" r="64" />
+        <circle class="donut-fill" cx="74" cy="74" r="64"
+          id="ring"
+          stroke-dasharray="402.12"
+          style="--circ: 402.12" />
+        <circle class="donut-dot" cx="74" cy="10" r="5.5" id="dot" />
+      </svg>
+      <div class="donut-label">
+        <span class="donut-num">88</span>
+        <span class="donut-sub">solved</span>
+      </div>
+    </div>
+
+    <!-- Stats Rows -->
+    <div class="rows">
+      <!-- Easy -->
+      <div>
+        <div class="row-top">
+          <span class="row-label" style="color: var(--green)">Easy</span>
+          <span class="row-frac"><b>41</b> / 932</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill easy" id="bar-easy"></div>
+        </div>
+      </div>
+      <!-- Medium -->
+      <div>
+        <div class="row-top">
+          <span class="row-label" style="color: var(--amber)">Medium</span>
+          <span class="row-frac"><b>44</b> / 2027</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill medium" id="bar-med"></div>
+        </div>
+      </div>
+      <!-- Hard -->
+      <div>
+        <div class="row-top">
+          <span class="row-label" style="color: var(--red)">Hard</span>
+          <span class="row-frac"><b>3</b> / 915</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill hard" id="bar-hard"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Data
+  const total = 88, totalQ = 3874;
+  const easy = 41, easyQ = 932;
+  const med  = 44, medQ  = 2027;
+  const hard = 3,  hardQ = 915;
+
+  // Ring geometry
+  const R = 64, C = 2 * Math.PI * R; // ≈ 402.12
+  const pct = total / totalQ;
+  const dash = C * pct;
+  const angle = 2 * Math.PI * pct - Math.PI / 2;
+  const dotX = 74 + R * Math.cos(angle);
+  const dotY = 74 + R * Math.sin(angle);
+
+  // Animate on load
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      // Ring
+      document.getElementById('ring').style.strokeDashoffset = C - dash;
+
+      // Dot
+      const dot = document.getElementById('dot');
+      dot.setAttribute('cx', dotX);
+      dot.setAttribute('cy', dotY);
+      dot.classList.add('show');
+
+      // Bars
+      document.getElementById('bar-easy').style.width = ((easy / easyQ) * 100).toFixed(1) + '%';
+      document.getElementById('bar-med').style.width  = ((med / medQ) * 100).toFixed(1) + '%';
+      document.getElementById('bar-hard').style.width = ((hard / hardQ) * 100).toFixed(1) + '%';
+    });
+  });
+</script>
+
+</body>
+</html>
