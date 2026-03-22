@@ -11,11 +11,11 @@ const roles = [
 ]
 
 /* ─────────────────────────────────────────────
-   Starfield – kept exactly as-is
+   Noise Wave Background
    ───────────────────────────────────────────── */
-function Starfield() {
+function NoiseWaveBackground() {
   useEffect(() => {
-    const canvas = document.getElementById("starfield") as HTMLCanvasElement
+    const canvas = document.getElementById("hero-bg") as HTMLCanvasElement
     if (!canvas) return
     const ctx = canvas.getContext("2d")
     if (!ctx) return
@@ -25,126 +25,75 @@ function Starfield() {
     canvas.width = width
     canvas.height = height
 
-    const stars: { x: number; y: number; z: number; size: number }[] = []
-    const numStars = 800
+    /* ── Wave layer config ── */
+    const waveLayers = [
+      { yOffset: 0.38, amplitude: 20, color: "rgba(140,90,220,0.2)" },
+      { yOffset: 0.45, amplitude: 22, color: "rgba(100,60,180,0.35)" },
+      { yOffset: 0.52, amplitude: 16, color: "rgba(120,80,200,0.3)" },
+      { yOffset: 0.58, amplitude: 12, color: "rgba(80,40,160,0.25)" },
+    ]
 
-    for (let i = 0; i < numStars; i++) {
-        stars.push({
-            x: Math.random() * width - width / 2,
-            y: Math.random() * height - height / 2,
-            z: Math.random() * width,
-            size: Math.random() * 1.5 + 0.1
-        })
-    }
-
-    const meteors: { x: number; y: number; length: number; speed: number; angle: number; color: string; life: number; maxLife: number }[] = []
-    const meteorColors = ["#A78BFA", "#FF9494", "#2FA4D7", "#ffffff", "#a855f7"]
-
-    function createMeteor() {
-        meteors.push({
-            x: Math.random() * width * 1.5 - width * 0.25,
-            y: -50 - Math.random() * 100,
-            length: Math.random() * 150 + 50,
-            speed: Math.random() * 15 + 10,
-            angle: Math.PI / 4 + (Math.random() * 0.1 - 0.05),
-            color: meteorColors[Math.floor(Math.random() * meteorColors.length)],
-            life: 0,
-            maxLife: Math.random() * 100 + 50
-        })
-    }
-
+    let time = 0
     let animationFrameId: number
 
     function animate() {
-        if (!ctx) return
-        ctx.fillStyle = "#000000"
-        ctx.fillRect(0, 0, width, height)
+      if (!ctx) return
+      time += 0.015
 
-        const cx = width / 2
-        const cy = height / 2
+      /* ── 1. Deep dark base ── */
+      ctx.fillStyle = "#080510"
+      ctx.fillRect(0, 0, width, height)
 
-        for (let i = 0; i < numStars; i++) {
-            const star = stars[i]
-            star.z -= 1.5
+      /* ── 2. Noise wave layers ── */
+      for (const layer of waveLayers) {
+        ctx.beginPath()
+        ctx.moveTo(0, height)
 
-            if (star.z <= 0) {
-                star.x = Math.random() * width - width / 2
-                star.y = Math.random() * height - height / 2
-                star.z = width
-                star.size = Math.random() * 1.5 + 0.1
-            }
-
-            const x = cx + star.x * (width / star.z)
-            const y = cy + star.y * (width / star.z)
-            
-            const opacity = 1 - star.z / width
-            ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
-            
-            const s = star.size * (width / star.z)
-            ctx.beginPath()
-            ctx.arc(x, y, s / 2, 0, Math.PI * 2)
-            ctx.fill()
+        for (let x = 0; x <= width; x += 2) {
+          const nx = x / width
+          const y =
+            height * layer.yOffset +
+            Math.sin(nx * 6 + time * 1.2) * layer.amplitude +
+            Math.sin(nx * 10 + time * 0.8) * (layer.amplitude * 0.5) +
+            Math.sin(nx * 14 + time * 1.6) * (layer.amplitude * 0.3)
+          ctx.lineTo(x, y)
         }
 
-        if (Math.random() < 0.015) {
-            createMeteor()
-        }
+        ctx.lineTo(width, height)
+        ctx.closePath()
+        ctx.fillStyle = layer.color
+        ctx.fill()
+      }
 
-        for (let i = meteors.length - 1; i >= 0; i--) {
-            const m = meteors[i]
-            m.x += Math.cos(m.angle) * m.speed
-            m.y += Math.sin(m.angle) * m.speed
-            m.life++
+      /* ── 3. Scanlines (CRT texture) ── */
+      for (let y = 0; y < height; y += 3) {
+        ctx.fillStyle = "rgba(0,0,0,0.12)"
+        ctx.fillRect(0, y, width, 1)
+      }
 
-            const tailX = m.x - Math.cos(m.angle) * m.length
-            const tailY = m.y - Math.sin(m.angle) * m.length
-
-            if (m.life < m.maxLife) {
-                const gradient = ctx.createLinearGradient(m.x, m.y, tailX, tailY)
-                gradient.addColorStop(0, m.color)
-                gradient.addColorStop(1, "transparent")
-
-                ctx.beginPath()
-                ctx.moveTo(m.x, m.y)
-                ctx.lineTo(tailX, tailY)
-                ctx.strokeStyle = gradient
-                ctx.lineWidth = 2
-                ctx.stroke()
-
-                ctx.beginPath()
-                ctx.arc(m.x, m.y, 2, 0, Math.PI * 2)
-                ctx.fillStyle = m.color
-                ctx.fill()
-            }
-
-            if (m.life > m.maxLife || m.y > height + 200 || m.x > width + 200 || m.x < -200) {
-                meteors.splice(i, 1)
-            }
-        }
-
-        animationFrameId = requestAnimationFrame(animate)
+      animationFrameId = requestAnimationFrame(animate)
     }
 
     animate()
 
     const handleResize = () => {
-        width = window.innerWidth
-        height = window.innerHeight
-        canvas.width = width
-        canvas.height = height
+      width = window.innerWidth
+      height = window.innerHeight
+      canvas.width = width
+      canvas.height = height
     }
 
     window.addEventListener("resize", handleResize)
 
     return () => {
-        cancelAnimationFrame(animationFrameId)
-        window.removeEventListener("resize", handleResize)
+      cancelAnimationFrame(animationFrameId)
+      window.removeEventListener("resize", handleResize)
     }
   }, [])
 
   return (
-    <div className="absolute inset-0 z-0 bg-black">
-      <canvas id="starfield" className="w-full h-full" />
+    <div className="absolute inset-0 z-0" style={{ backgroundColor: "#080510" }}>
+      <canvas id="hero-bg" className="w-full h-full" style={{ pointerEvents: "none" }} />
     </div>
   )
 }
@@ -169,9 +118,8 @@ function GlitchRole() {
 
   return (
     <span
-      className="hero-glitch-text text-primary font-bold inline-block transition-opacity duration-300"
+      className="text-primary font-bold inline-block transition-opacity duration-300"
       style={{ opacity: visible ? 1 : 0 }}
-      data-text={roles[roleIndex]}
     >
       {roles[roleIndex]}
     </span>
@@ -245,8 +193,8 @@ export function Hero() {
       id="hero"
       className="dark min-h-screen flex items-center justify-center relative overflow-hidden text-foreground"
     >
-      {/* Astronomical Background – untouched */}
-      <Starfield />
+      {/* Background – Noise Waves */}
+      <NoiseWaveBackground />
 
       {/* Content layer */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-28 lg:py-32">
@@ -254,19 +202,25 @@ export function Hero() {
           className="grid lg:grid-cols-[1fr_auto] gap-16 lg:gap-24 items-center"
         >
           {/* ── Left: Text Column ── */}
-          <div className="flex flex-col gap-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
+          <div className="flex flex-col gap-5 text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
             {/* Greeting */}
             <p
-              className="text-primary font-medium mb-4 animate-fade-in-up flex items-center justify-center lg:justify-start gap-1"
+              className="text-primary font-medium mb-1 animate-fade-in-up flex items-center justify-center lg:justify-start gap-1"
             >
               Hello <span className="animate-wave text-xl">👋</span>, I am
             </p>
 
-            {/* Name – Orbitron futuristic font */}
+            {/* Name – Rajdhani font */}
             <h1
-              className="hero-name text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up"
+              className="hero-name mb-2 animate-fade-in-up"
               style={{
-                fontFamily: "var(--font-orbitron), sans-serif",
+                fontFamily: "'Rajdhani', sans-serif",
+                fontSize: "clamp(3rem, 8vw, 6rem)",
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                color: "#FFFFFF",
+                textShadow: "none",
+                filter: "none",
                 animationDelay: "0.1s",
               }}
             >
@@ -367,8 +321,6 @@ export function Hero() {
                   className="w-full h-full object-cover object-top"
                 />
               </div>
-              {/* Orbiting decorative ring */}
-              <OrbitRingSVG size={384} />
             </div>
           </div>
         </div>

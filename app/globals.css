@@ -541,9 +541,13 @@
   box-shadow: 0 0 15px rgba(167, 139, 250, 0.15);
 }
 
-/* Name text glow */
+/* Name text – clean, no glow */
 .hero-name {
-  text-shadow:
-    0 0 40px rgba(167, 139, 250, 0.15),
-    0 0 80px rgba(167, 139, 250, 0.05);
+  text-shadow: none;
+  filter: none;
+}
+
+.hero-name::before,
+.hero-name::after {
+  display: none;
 }
