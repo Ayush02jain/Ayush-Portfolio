@@ -19,6 +19,28 @@ const education = [
       "Currently pursuing B.Tech in CSE with focus on software development, machine learning, and cloud computing. Active participant in coding competitions and hackathons.",
     current: true,
   },
+  {
+    id: 2,
+    degree: "Intermediate",
+    field: "Science (PCM)",
+    institution: "Seven Hills School",
+    location: "Etawah, Uttar Pradesh",
+    duration: "Apr'21 - Mar'22",
+    score: "Percentage: 74.60%",
+    description: "Completed higher secondary education with a focus on Physics, Chemistry, and Mathematics.",
+    current: false,
+  },
+  {
+    id: 3,
+    degree: "Matriculation",
+    field: "General Science",
+    institution: "Seven Hills School",
+    location: "Etawah, Uttar Pradesh",
+    duration: "Apr'19 - Mar'20",
+    score: "Percentage: 78.17%",
+    description: "Completed secondary education with a focus on core academic subjects.",
+    current: false,
+  },
 ]
 
 export function Education() {
