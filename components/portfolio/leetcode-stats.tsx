@@ -118,16 +118,16 @@ function DonutChart({
       {/* Center label */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-1">
         <div className="flex items-baseline gap-0.5">
-          <span className="text-4xl font-bold text-white leading-none">{solved}</span>
-          <span className="text-sm text-muted-foreground font-medium">/{total}</span>
+          <span className="text-4xl font-bold text-black leading-none">{solved}</span>
+          <span className="text-sm text-black font-medium">/{total}</span>
         </div>
-        <div className="flex items-center gap-1.5 mt-1.5 text-[#22c55e]">
+        <div className="flex items-center gap-1.5 mt-1.5 text-green-600">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
           <span className="text-sm font-semibold">Solved</span>
         </div>
-        <div className="mt-1.5 text-xs text-muted-foreground font-medium">
+        <div className="mt-1.5 text-xs text-zinc-700 font-medium">
           3 Attempting
         </div>
       </div>
