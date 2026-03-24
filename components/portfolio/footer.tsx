@@ -1,6 +1,6 @@
 "use client"
 
-import { Github, Linkedin, Mail, Heart } from "lucide-react"
+import { Github, Linkedin, Mail, Heart, Twitter } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -33,6 +33,15 @@ export function Footer() {
             >
               <Linkedin className="h-5 w-5" />
               <span className="sr-only">LinkedIn</span>
+            </a>
+            <a
+              href="https://x.com/AyushjainX"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+            >
+              <Twitter className="h-5 w-5" />
+              <span className="sr-only">Twitter (X)</span>
             </a>
             <a
               href="mailto:ayushjsan01@gmail.com"
