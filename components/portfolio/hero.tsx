@@ -338,7 +338,7 @@ export function Hero() {
                 className="w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-2xl overflow-hidden border-[3px] border-[#A78BFA]/60"
               >
                 <img
-                  src="/ayush.JPG.jpeg"
+                  src="/profile.jpg"
                   alt="Ayush Jain"
                   className="w-full h-full object-cover object-top"
                 />
