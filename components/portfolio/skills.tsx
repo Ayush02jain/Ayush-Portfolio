@@ -49,13 +49,14 @@ const technicalSkills = [
     ],
   },
   {
-    category: "Data Science / ML",
+    category: "ML Tools",
     icon: Database,
     skills: [
       { name: "NumPy", level: 80, icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/numpy/numpy-original.svg" },
       { name: "Pandas", level: 80, icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pandas/pandas-original.svg", invertDark: true },
       { name: "Matplotlib", level: 75, icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/matplotlib/matplotlib-original.svg" },
       { name: "TensorFlow/Keras", level: 70, icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" },
+      { name: "LangChain", level: 20, icon: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/langchain-color.svg" },
     ],
   },
 ]
