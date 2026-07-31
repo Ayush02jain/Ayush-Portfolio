@@ -5,11 +5,34 @@ import { useInView } from "@/hooks/use-in-view"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 import { cn } from "@/lib/utils"
 import { Github, ExternalLink } from "lucide-react"
 
 const projects = [
-    {
+  {
+    id: 4,
+    title: "Code-Aware RAG System",
+    description: [
+      "Built an AST-based RAG pipeline using tree-sitter to semantically chunk Python repositories into functions, classes, and imports for accurate vector retrieval.",
+      "Engineered a FastAPI backend with async job orchestration, Pinecone vector search, session-isolated namespaces, guardrails, and retry logic for production reliability.",
+      "Delivered a React web interface enabling developers to index any GitHub repository and query it through a citation-traced, grounded chat interface in real time.",
+    ],
+    techStack: ["Python", "FastAPI", "React", "tree-sitter", "Pinecone", "Groq API", "sentence-transformers"],
+    category: "ML",
+    github: "https://github.com/Ayush02jain/code-aware-RAG",
+    demo: "#",
+    image: "/code_aware.png",
+    imageClassName: "object-center",
+    date: "Jan '26 - Jul '26",
+  },
+  {
     id: 1,
     title: "Quizzer",
     description: [
@@ -121,82 +144,101 @@ export function Projects() {
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => (
-            <Card
-              key={project.id}
-              className={cn(
-                "border-2 group overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:border-primary/50 hover:-translate-y-1",
-                isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-              )}
-              style={{ transitionDelay: `${400 + index * 100}ms` }}
-            >
-              {/* Project Image */}
-              <div className="relative overflow-hidden h-48 shrink-0">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className={cn(
-                    "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110",
-                    project.imageClassName
-                  )}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                <Badge className="absolute top-3 right-3" variant="secondary">
-                  {project.date}
-                </Badge>
-              </div>
-
-              <CardContent className="p-5 flex-grow">
-                <h3 className="text-lg font-semibold text-foreground mb-3 line-clamp-2">
-                  {project.title}
-                </h3>
-                <ul className="text-sm text-muted-foreground mb-4 space-y-1.5">
-                  {project.description.slice(0, 3).map((point, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span className="text-primary mt-1">{">"}</span>
-                      <span className="line-clamp-2">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.techStack.map((tech) => (
-                    <Badge key={tech} variant="outline" className="text-xs">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-
-              <CardFooter className="p-5 pt-0 gap-3 mt-auto">
-                <Button asChild variant="outline" size="sm" className="flex-1">
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="gap-2"
+        {/* Projects Carousel */}
+        <div className="relative px-4 sm:px-12">
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4 md:-ml-6">
+              {filteredProjects.map((project, index) => (
+                <CarouselItem key={project.id} className="pl-4 md:pl-6 md:basis-1/2 lg:basis-1/3">
+                  <Card
+                    className={cn(
+                      "h-full border-2 border-border dark:border-border/50 group overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:border-primary/50 hover:-translate-y-1",
+                      isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                    )}
+                    style={{ transitionDelay: `${400 + index * 100}ms` }}
                   >
-                    <Github className="h-4 w-4" />
-                    GitHub
-                  </a>
-                </Button>
-                {project.demo !== "#" && (
-                  <Button asChild size="sm" className="flex-1">
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="gap-2"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      Demo
-                    </a>
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
+                    {/* Project Image */}
+                    <div className="relative overflow-hidden h-48 shrink-0">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className={cn(
+                          "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110",
+                          project.imageClassName
+                        )}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                      <Badge className="absolute top-3 right-3" variant="secondary">
+                        {project.date}
+                      </Badge>
+                    </div>
+
+                    <CardContent className="p-5 flex-grow">
+                      <h3 className="text-lg font-semibold text-foreground mb-3 line-clamp-2">
+                        {project.title}
+                      </h3>
+                      <ul className="text-sm text-muted-foreground mb-4 space-y-1.5">
+                        {project.description.slice(0, 3).map((point, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-primary mt-1">{">"}</span>
+                            <span className="line-clamp-2">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.techStack.map((tech) => (
+                          <Badge key={tech} variant="outline" className="text-xs">
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+
+                    <CardFooter className="p-5 pt-0 gap-3 mt-auto">
+                      <Button asChild variant="outline" size="sm" className="flex-1">
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="gap-2"
+                        >
+                          <Github className="h-4 w-4" />
+                          GitHub
+                        </a>
+                      </Button>
+                      {project.demo !== "#" && (
+                        <Button asChild size="sm" className="flex-1">
+                          <a
+                            href={project.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gap-2"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            Demo
+                          </a>
+                        </Button>
+                      )}
+                    </CardFooter>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden sm:block">
+              <CarouselPrevious className="-left-12" />
+              <CarouselNext className="-right-12" />
+            </div>
+            {/* Mobile Navigation */}
+            <div className="flex sm:hidden justify-center gap-4 mt-6">
+              <CarouselPrevious className="static translate-y-0" />
+              <CarouselNext className="static translate-y-0" />
+            </div>
+          </Carousel>
         </div>
       </div>
     </section>
