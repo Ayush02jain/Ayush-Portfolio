@@ -267,7 +267,7 @@ export function Hero() {
             >
               <Button asChild size="lg" className="hero-cta-primary gap-2 h-12 px-8 text-base rounded-lg w-full sm:w-auto">
                 <a
-                  href="https://drive.google.com/file/d/19YuXZvmUTInn_eB76rYLw2z1bTn6U3Kx/view"
+                  href="https://drive.google.com/file/d/1i3njn3CbD71S2RHJnrjOqxetVWN0tCeH/view?usp=sharing"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
